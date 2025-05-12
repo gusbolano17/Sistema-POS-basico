@@ -1,0 +1,31 @@
+<div class="container mt-5 pt-5">
+  <div class="row">
+    <div class="col-12 col-sm-8 col-md-6 m-auto">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <h1>Login</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+                <label class="form-control-label">Username</label>
+                <input type="text" name="" class="form-control my-3 py-2" formControlName="username">
+                <label class="form-control-label">Password</label>
+                <input type="password" name="" class="form-control my-3 py-2" formControlName="password">
+                <div class="text-center my-3">
+                  <p-button label="submit" type="submit"></p-button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <img src="img-login.jpg" alt="contable" class="d-sm-none d-md-block card-img h-100">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

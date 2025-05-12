@@ -1,0 +1,16 @@
+<p-toolbar class="py-3">
+  <ng-template #start>
+    <div class="d-flex align-items-center gap-2">
+      <p-button icon="pi pi-bars" severity="contrast" (onClick)="toggleSidebar.emit()"/>
+      <input type="text" placeholder="search..." class="form-control">
+    </div>
+  </ng-template>
+
+  <ng-template #end>
+    <div class="d-flex align-items-center gap-2">
+      <p-button icon="pi pi-envelope" severity="contrast"/>
+      <p-button icon="pi pi-bell" severity="contrast"/>
+      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" [style]="{ width: '32px', height: '32px' }" />
+    </div>
+  </ng-template>
+</p-toolbar>

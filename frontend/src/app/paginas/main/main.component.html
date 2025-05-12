@@ -1,0 +1,5 @@
+<navbar (toggleSidebar)="toggleSidebar()"/>
+<sidebar [visible]="sidebarOpened()" (onHide)="sidebarOpened.set(false)"/>
+<main>
+  <router-outlet/>
+</main>
