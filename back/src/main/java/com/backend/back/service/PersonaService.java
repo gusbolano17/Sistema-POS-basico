@@ -1,15 +1,17 @@
 package com.backend.back.service;
 
 import com.backend.back.models.Persona;
+import com.backend.back.models.dtos.PersonaReq;
+import com.backend.back.models.dtos.ResponseDTO;
 import com.backend.back.repository.IPersonaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PersonaService {
@@ -17,49 +19,75 @@ public class PersonaService {
     @Autowired
     private IPersonaRepository personaRepository;
 
-    public List<Persona> listarPersonas() throws Exception {
-        return personaRepository.findAll();
+
+    public ResponseEntity<ResponseDTO<List<Persona>>> listarPersonas() throws Exception {
+        try {
+            var listaPersonas = personaRepository.findAll();
+
+            if (listaPersonas.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("No hay personas registradas", "error", null));
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Personas encontradas", "ok", listaPersonas));
+            }
+
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
     }
 
     public Optional<Persona> buscarPersonaPorId(Long id) throws Exception {
         return personaRepository.findById(id);
     }
 
-    Optional<Persona> buscarPersonaPorDoc(String tipoDocumento, String documento) throws Exception {
-        return personaRepository.buscarPersonaPorDoc(tipoDocumento, documento);
+    public ResponseEntity<ResponseDTO<Persona>> buscarPersonaPorDoc(String tipoDocumento, String documento) throws Exception {
+        try{
+            Optional<Persona> persona = personaRepository.buscarPersonaPorDoc(tipoDocumento, documento);
+            return persona
+                    .map(value ->
+                            ResponseEntity.ok(new ResponseDTO<>("Persona encontrada", "ok", value)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseDTO<>("Persona no encontrada", "error", null)));
+        }catch (DataAccessException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Map<String,Object> crearPersona(Persona persona) throws Exception {
-        Map<String,Object> response = new HashMap<>();
+    public ResponseEntity<ResponseDTO<Persona>> crearPersona(PersonaReq persona) throws Exception {
 
         try {
             Persona nuevaPersona = new Persona();
-            nuevaPersona.setNombre(persona.getNombre());
-            nuevaPersona.setApellido(persona.getApellido());
-            nuevaPersona.setEmail(persona.getEmail());
-            nuevaPersona.setTipoDocumento(persona.getTipoDocumento());
-            nuevaPersona.setDocumento(persona.getDocumento());
-            nuevaPersona.setDireccion(persona.getDireccion());
-            nuevaPersona.setTelefono(persona.getTelefono());
+            nuevaPersona.setNombre(persona.nombre());
+            nuevaPersona.setApellido(persona.apellido());
+            nuevaPersona.setEmail(persona.email());
+            nuevaPersona.setTipoDocumento(persona.tipoDocumento());
+            nuevaPersona.setDocumento(persona.documento());
+            nuevaPersona.setDireccion(persona.direccion());
+            nuevaPersona.setTelefono(persona.telefono());
+            nuevaPersona.setFechaNacimiento(persona.fechaNacimiento());
+            nuevaPersona.setPais(persona.pais());
+            nuevaPersona.setDepartamentoId(persona.departamento());
+            nuevaPersona.setCiudadId(persona.ciudad());
 
             personaRepository.save(nuevaPersona);
 
-            response.put("msg", "Persona guardada");
-            response.put("code", 201);
-            response.put("status", "created");
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseDTO<>("Persona guardada", "ok", nuevaPersona));
+
         }catch (Exception e){
-            response.put("msg", e.getMessage());
-            response.put("code", 500);
-            response.put("status", "error");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
         }
 
-        return response;
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Map<String,Object> actualizarPersona(Persona persona) throws Exception {
-        Map<String,Object> response = new HashMap<>();
+    public ResponseEntity<ResponseDTO<Optional<Persona>>> actualizarPersona(Persona persona) throws Exception {
+
         try{
 
             Optional<Persona> personaExist = buscarPersonaPorId(persona.getId());
@@ -71,16 +99,26 @@ public class PersonaService {
                 personaExistente.setDocumento(persona.getDocumento());
                 personaExistente.setDireccion(persona.getDireccion());
                 personaExistente.setTelefono(persona.getTelefono());
+                personaExistente.setFechaNacimiento(persona.getFechaNacimiento());
+                personaExistente.setPais(persona.getPais());
+                personaExistente.setDepartamentoId(persona.getDepartamentoId());
+                personaExistente.setCiudadId(persona.getCiudadId());
 
                 personaRepository.save(personaExistente);
+
             });
 
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseDTO<>("Persona actualizada", "ok", personaExist));
+
         }catch (Exception e){
-            response.put("msg", e.getMessage());
-            response.put("code", 500);
-            response.put("status", "error");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+
         }
-        return response;
+
+
     }
 
 }

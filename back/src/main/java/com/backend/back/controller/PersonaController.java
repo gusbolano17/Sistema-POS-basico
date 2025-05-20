@@ -1,6 +1,7 @@
 package com.backend.back.controller;
 
 import com.backend.back.models.Persona;
+import com.backend.back.models.dtos.PersonaReq;
 import com.backend.back.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class PersonaController {
 
     @GetMapping("/listar")
     public ResponseEntity<?> listarPersonas() throws Exception{
-        return ResponseEntity.ok(personaService.listarPersonas());
+        return personaService.listarPersonas();
     }
 
     @GetMapping("/obtener/{id}")
@@ -25,14 +26,19 @@ public class PersonaController {
         return ResponseEntity.ok(personaService.buscarPersonaPorId(id));
     }
 
+    @GetMapping("/obtener/doc/{tipoDocumento}/{documento}")
+    public ResponseEntity<?> buscarPersonaPorDoc(@PathVariable("tipoDocumento") String tipoDocumento, @PathVariable("documento") String documento) throws Exception{
+        return personaService.buscarPersonaPorDoc(tipoDocumento, documento);
+    }
+
     @PostMapping("/crear")
-    public ResponseEntity<?> crearPersona(@RequestBody Persona persona) throws Exception {
-        return ResponseEntity.status(HttpStatus.CREATED).body(personaService.crearPersona(persona));
+    public ResponseEntity<?> crearPersona(@RequestBody PersonaReq persona) throws Exception {
+        return personaService.crearPersona(persona);
     }
 
     @PutMapping("/actualizar")
     public ResponseEntity<?> actualizarPersona(@RequestBody Persona persona) throws Exception {
-        return ResponseEntity.status(HttpStatus.CREATED).body(personaService.actualizarPersona(persona));
+        return personaService.actualizarPersona(persona);
     }
 
 }

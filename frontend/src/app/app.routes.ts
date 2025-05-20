@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import {LoginComponent} from './paginas/login/login.component';
 import {MainComponent} from './paginas/main/main.component';
 import {authGuard} from './servicios/auth.guard';
+import {personasRoutes} from './paginas/personas/personas.routes';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'login'},
@@ -15,7 +16,7 @@ export const routes: Routes = [
       loadComponent: ()=> import('./paginas/main/dashboard/dashboard.component').then(m => m.DashboardComponent),
     },{
       path: 'personas',
-      loadComponent: () => import('./paginas/personas/personas.component').then(m => m.PersonasComponent),
+      children: personasRoutes
     },{
       path: '',
       pathMatch: 'full',

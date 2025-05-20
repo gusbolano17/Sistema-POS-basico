@@ -1,5 +1,5 @@
 <navbar (toggleSidebar)="toggleSidebar()"/>
 <sidebar [visible]="sidebarOpened()" (onHide)="sidebarOpened.set(false)"/>
-<main>
+<div class="container-fluid p-3">
   <router-outlet/>
-</main>
+</div>

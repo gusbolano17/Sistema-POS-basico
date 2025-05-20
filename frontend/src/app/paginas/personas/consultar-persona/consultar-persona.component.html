@@ -1,0 +1,43 @@
+<p-tabs value="0">
+  <p-tablist>
+    <p-tab value="0">Consultar persona</p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="0">
+
+      <div class="row">
+        <div class="col-md-4">
+          <p-floatlabel variant="on" class="mt-3">
+            <p-select
+              [options]="opcionesBusqueda"
+              size="large"
+              fluid="true"
+              (onChange)="switchearBusqueda($event)"
+              [showClear]="true"
+              inputId="on_label"
+            />
+            <label for="on_label">Seleccione</label>
+          </p-floatlabel>
+        </div>
+      </div>
+
+      <div class="row">
+          <p-table [value]="personas" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-persona>
+              <tr>
+                <td>{{ persona.nombre }}</td>
+                <td>{{ persona.apellido }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

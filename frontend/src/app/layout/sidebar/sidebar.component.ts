@@ -4,6 +4,7 @@ import {Menu} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {Ripple} from 'primeng/ripple';
 import {Button} from 'primeng/button';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'sidebar',
@@ -11,7 +12,8 @@ import {Button} from 'primeng/button';
     Sidebar,
     Menu,
     Ripple,
-    Button
+    Button,
+    RouterLink
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
@@ -35,12 +37,12 @@ export class SidebarComponent implements OnInit{
           {
             label: 'Crear',
             icon: 'pi pi-plus',
-            shortcut: '⌘+N'
+            route : 'personas/crear'
           },
           {
             label: 'Consultar',
             icon: 'pi pi-search',
-            shortcut: '⌘+S'
+            route : 'personas/consultar'
           }
         ]
       }

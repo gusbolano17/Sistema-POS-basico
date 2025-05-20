@@ -37,6 +37,11 @@ public class UsuarioService {
             nuevoUsuario.setTelefono(usuario.getTelefono());
             nuevoUsuario.setUsername(usuario.getUsername());
             nuevoUsuario.setPassword(usuario.getPassword());
+            nuevoUsuario.setFechaNacimiento(usuario.getFechaNacimiento());
+            nuevoUsuario.setFechaNacimiento(usuario.getFechaNacimiento());
+            nuevoUsuario.setPais(usuario.getPais());
+            nuevoUsuario.setDepartamentoId(usuario.getDepartamentoId());
+            nuevoUsuario.setCiudadId(usuario.getCiudadId());
             nuevoUsuario.setFechaCreacion(new Date());
 
             usuarioRepository.save(nuevoUsuario);

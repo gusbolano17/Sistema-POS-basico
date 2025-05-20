@@ -19,8 +19,6 @@ public class PagoService {
     private IPagoRepository pagoRepository;
     @Autowired
     private VentasService ventaService;
-    @Autowired
-    private IDetalleVentaRepository detalleVentaRepository;
 
     public Map<String,Object> realizarPago(PagoReq pagoReq) throws Exception {
         try{
