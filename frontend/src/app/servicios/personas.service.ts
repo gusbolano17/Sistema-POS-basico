@@ -18,11 +18,19 @@ export class PersonasService {
   }
 
   buscarPersona(id : number) {
-    return this.http.get<ResponseDto<Personas>>(`${this.httpUtil.url}/personas/obtener/${id}`);
+    return this.http.get<Personas>(`${this.httpUtil.url}/personas/obtener/${id}`);
   }
 
   buscarPersonaPorDoc(tipoDoc : string, doc : string){
-    return this.http.get<ResponseDto<Personas[]>>(`${this.httpUtil.url}/personas/obtener/doc/${tipoDoc}/${doc}`);
+    return this.http.get<ResponseDto<Personas>>(`${this.httpUtil.url}/personas/obtener/doc/${tipoDoc}/${doc}`);
+  }
+
+  buscarPersonaPorNombre(nombre : string){
+    return this.http.get<ResponseDto<Personas[]>>(`${this.httpUtil.url}/personas/listar/nombre/${nombre}`);
+  }
+
+  buscarPersonaLocacion(dep: string | undefined, mun: string | undefined){
+    return this.http.get<ResponseDto<Personas[]>>(`${this.httpUtil.url}/personas/listar/departamento/${dep}/ciudad/${mun}`);
   }
 
   agregarPersona(persona : PersonaDTO){

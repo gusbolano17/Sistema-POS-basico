@@ -55,6 +55,36 @@ public class PersonaService {
         }
     }
 
+    public ResponseEntity<ResponseDTO<List<Persona>>> buscarPersonasPorNombre(String nombre) throws Exception {
+        try{
+            List<Persona> personas = personaRepository.buscarPersonaPorNombre(nombre);
+            if (personas.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("No se encontraron personas con ese nombre", "error", null));
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Personas encontradas", "ok", personas));
+            }
+        }catch (DataAccessException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
+    }
+
+    public ResponseEntity<ResponseDTO<List<Persona>>> buscarPersonaLocacion(String departamento, String ciudad) throws Exception {
+        try{
+            List<Persona> personas = personaRepository.buscarPersonaLocacion(departamento, ciudad);
+            if (personas.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("No se encontraron personas con ese nombre", "error", null));
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Personas encontradas", "ok", personas));
+            }
+        }catch (DataAccessException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
+        }
+
     @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<ResponseDTO<Persona>> crearPersona(PersonaReq persona) throws Exception {
 

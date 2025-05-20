@@ -10,7 +10,7 @@ export interface Personas {
     documento : string;
     telefono : string;
     direccion : string;
-    fechaNacimiento : string;
+    fechaNacimiento : Date;
     pais : string;
     departamentoId : Departamento;
     ciudadId : Ciudad;

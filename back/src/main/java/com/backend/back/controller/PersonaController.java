@@ -31,6 +31,16 @@ public class PersonaController {
         return personaService.buscarPersonaPorDoc(tipoDocumento, documento);
     }
 
+    @GetMapping("/listar/nombre/{nombre}")
+    public ResponseEntity<?> buscarPersonasPorNombre(@PathVariable("nombre") String nombre) throws Exception{
+        return personaService.buscarPersonasPorNombre(nombre);
+    }
+
+    @GetMapping("/listar/departamento/{dep}/ciudad/{city}")
+    public ResponseEntity<?> buscarPersonaLocacion(@PathVariable("dep") String dep, @PathVariable("city") String city) throws Exception{
+        return personaService.buscarPersonaLocacion(dep, city);
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<?> crearPersona(@RequestBody PersonaReq persona) throws Exception {
         return personaService.crearPersona(persona);

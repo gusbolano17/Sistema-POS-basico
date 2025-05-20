@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {TabsModule} from 'primeng/tabs';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
@@ -16,6 +16,7 @@ import {DatePicker} from 'primeng/datepicker';
 import {ToastModule} from 'primeng/toast';
 import {ToastService} from '../../../servicios/toast.service';
 import {MessageService} from 'primeng/api';
+import {Personas} from '../../../modelos/personas';
 
 @Component({
   selector: 'app-crear-persona',
@@ -42,6 +43,9 @@ export class CrearPersonaComponent implements OnInit{
   public ciudades : Ciudad[] = [];
   public personaForm : FormGroup;
 
+  @Input() titulo : string = "Crear persona";
+  @Input() editando : boolean = false;
+  @Input() persona : Personas | undefined;
 
   private personaService = inject(PersonasService);
   private departamentoService = inject(DepartamentoService);
@@ -67,6 +71,20 @@ export class CrearPersonaComponent implements OnInit{
   ngOnInit(): void {
     this.departamentoService.listarDepartamentos().subscribe(resp => {
       this.departamentos = resp;
+    });
+    console.log(this.persona)
+    this.personaForm.patchValue({
+      nombre: this.persona?.nombre,
+      apellido : this.persona?.apellido,
+      tipoDocumento: this.persona?.tipoDocumento,
+      documento: this.persona?.documento,
+      fechaNacimiento: this.persona?.fechaNacimiento,
+      direccion: this.persona?.direccion,
+      telefono: this.persona?.telefono,
+      email: this.persona?.email,
+      pais: this.persona?.pais,
+      departamento: this.persona?.departamentoId,
+      ciudad: this.persona?.ciudadId
     });
   }
 
