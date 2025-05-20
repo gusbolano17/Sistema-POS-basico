@@ -70,14 +70,16 @@ public class VentasService {
                 return responseBuilder("El usuario no existe", 400, "bad request", null);
             }
 
-            Optional<Persona> personaExist = personaService.buscarPersonaPorDoc(ventaReq.tipoDocCliente(), ventaReq.docCliente());
-            if (personaExist.isEmpty()){
+            Persona personaExist = Objects.requireNonNull(personaService
+                    .buscarPersonaPorDoc(ventaReq.tipoDocCliente(), ventaReq.docCliente()).getBody()).body();
+
+            if (personaExist != null){
                 return responseBuilder("La persona no existe", 400, "bad request", null);
             }
 
             Ventas ventas = new Ventas();
             ventas.setFactura(ventaReq.factura());
-            ventas.setClienteId(personaExist.get());
+            ventas.setClienteId(personaExist);
             ventas.setUsuarioId(usuarioExist.get());
             ventas.setFechaEmision(new Date());
             ventas.setFechaModificacion(new Date());
@@ -148,13 +150,15 @@ public class VentasService {
                 return responseBuilder("El usuario no existe", 400, "bad request", null);
             }
 
-            Optional<Persona> personaExist = personaService.buscarPersonaPorDoc(ventaReq.tipoDocCliente(), ventaReq.docCliente());
-            if (personaExist.isEmpty()){
+            Persona personaExist =
+                    Objects.requireNonNull(personaService.buscarPersonaPorDoc(ventaReq.tipoDocCliente(), ventaReq.docCliente())
+                            .getBody()).body();
+            if (personaExist != null){
                 return responseBuilder("La persona no existe", 400, "bad request", null);
             }
 
             ventaExist.setFactura(ventaReq.factura());
-            ventaExist.setClienteId(personaExist.get());
+            ventaExist.setClienteId(personaExist);
             ventaExist.setUsuarioId(usuarioExist.get());
             ventaExist.setFechaEmision(new Date());
             ventaExist.setFechaModificacion(new Date());

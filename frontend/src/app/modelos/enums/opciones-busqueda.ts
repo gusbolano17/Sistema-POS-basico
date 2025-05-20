@@ -1,0 +1,9 @@
+export enum OpcionesBusqueda {
+
+  TODO = 'TODO',
+  NOMBRE = 'NOMBRE',
+  DOCUMENTO = 'DOCUMENTO',
+  FECHA_CREACION = 'FECHA CREACION',
+  LOCACION = 'LOCACION'
+
+}

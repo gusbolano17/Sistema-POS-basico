@@ -6,7 +6,7 @@
     <p-tabpanel value="0">
 
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <p-floatlabel variant="on" class="mt-3">
             <p-select
               [options]="opcionesBusqueda"
@@ -19,24 +19,145 @@
             <label for="on_label">Seleccione</label>
           </p-floatlabel>
         </div>
+        <div class="col-md-3">
+          @switch (opcionActual){
+            @case(OpcionesBusqueda.NOMBRE){
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <p-floatlabel variant="on">
+                    <input
+                      pInputText
+                      id="nombre"
+                      autocomplete="off"
+                      pSize="large"
+                      fluid="true"/>
+                    <label for="nombre">nombre</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            }
+            @case (OpcionesBusqueda.DOCUMENTO){
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <p-floatlabel variant="on">
+                    <p-select
+                      [options]="tiposDocumentos"
+                      size="large"
+                      fluid="true"
+                      [showClear]="true"
+                      inputId="on_label"
+                    />
+                    <label for="on_label">Seleccione</label>
+                  </p-floatlabel>
+                </div>
+                <div class="col-md-6">
+                  <p-floatlabel variant="on">
+                    <input
+                      pInputText
+                      id="documento"
+                      autocomplete="off"
+                      pSize="large"
+                      fluid="true"/>
+                    <label for="documento">Documento</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            }
+            @case (OpcionesBusqueda.FECHA_CREACION){
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <p-floatlabel variant="on">
+                    <p-datePicker
+                      id="fechainicial"
+                      dateFormat="yyyy-mm-dd"
+                      size="large"
+                      fluid="true"
+                      [showIcon]="true"
+                      inputId="buttondisplay"
+                      [showOnFocus]="false"/>
+                    <label for="fechainicial">Fecha inicial</label>
+                  </p-floatlabel>
+                </div>
+                <div class="col-md-6">
+                  <p-floatlabel variant="on">
+                    <p-datePicker
+                      id="fechafinal"
+                      dateFormat="yyyy-mm-dd"
+                      size="large"
+                      fluid="true"
+                      [showIcon]="true"
+                      inputId="buttondisplay"
+                      [showOnFocus]="false"/>
+                    <label for="fechafinal">Fecha final</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            }
+            @case (OpcionesBusqueda.LOCACION){
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <p-floatlabel variant="on">
+                    <p-select
+                      id="departamento"
+                      [options]="departamentos"
+                      optionLabel="nombre"
+                      size="large"
+                      fluid="true"
+                      (onChange)="listarCiudadesDep($event)"
+                    />
+                    <label for="departamento">Departamento</label>
+                  </p-floatlabel>
+                </div>
+                <div class="col-md-6">
+                  <p-floatlabel variant="on">
+                    <p-select
+                      id="ciudad"
+                      [options]="ciudades"
+                      optionLabel="municipio"
+                      size="large"
+                      fluid="true"
+                    />
+                    <label for="ciudad">Ciudad</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            }
+          }
+        </div>
+        <div class="col-md-3">
+          @if (opcionActual != OpcionesBusqueda.TODO && opcionActual != null) {
+            <p-button label="Buscar" type="submit" class="mt-4"/>
+          }
+        </div>
       </div>
 
-      <div class="row">
+      @if (personas.length > 0){
+        <div class="row mt-3">
           <p-table [value]="personas" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #header>
               <tr>
                 <th>Nombre</th>
                 <th>Apellido</th>
+                <th>Tipo documento</th>
+                <th>Documento</th>
+                <th>Acciones</th>
               </tr>
             </ng-template>
             <ng-template #body let-persona>
               <tr>
                 <td>{{ persona.nombre }}</td>
                 <td>{{ persona.apellido }}</td>
+                <td>{{ persona.tipoDocumento }}</td>
+                <td>{{ persona.documento }}</td>
+                <td class="d-flex gap-2">
+                  <p-button label="Editar" icon="pi pi-pencil" severity="warn"/>
+                  <p-button label="Eliminar" icon="pi pi-trash" severity="danger"/>
+                </td>
               </tr>
             </ng-template>
           </p-table>
         </div>
+      }
 
     </p-tabpanel>
   </p-tabpanels>
