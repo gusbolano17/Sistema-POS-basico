@@ -20,8 +20,10 @@ public class Persona {
     private String documento;
     private String telefono;
     private String direccion;
-    private Date fechaNacimiento;
     private String pais;
+    private Date fechaNacimiento;
+    private Date fechaCreacion;
+    private Date fechaModificacion;
     @JoinColumn(name = "departamento_id", referencedColumnName = "id")
     @ManyToOne
     private Departamentos departamentoId;

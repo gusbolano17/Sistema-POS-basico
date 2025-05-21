@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/v1/rest/api/personas")
@@ -41,14 +43,19 @@ public class PersonaController {
         return personaService.buscarPersonaLocacion(dep, city);
     }
 
+    @GetMapping("/listar/fecha-creacion/{fi}/{ff}")
+    public ResponseEntity<?> buscarPersonaFechaCreacion(@PathVariable("fi") Date fi, @PathVariable("ff") Date ff) throws Exception{
+        return personaService.listarPersonasFechaCreacion(fi, ff);
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<?> crearPersona(@RequestBody PersonaReq persona) throws Exception {
         return personaService.crearPersona(persona);
     }
 
-    @PutMapping("/actualizar")
-    public ResponseEntity<?> actualizarPersona(@RequestBody Persona persona) throws Exception {
-        return personaService.actualizarPersona(persona);
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<?> actualizarPersona(@PathVariable("id") Long id,@RequestBody PersonaReq persona) throws Exception {
+        return personaService.actualizarPersona(id,persona);
     }
 
 }

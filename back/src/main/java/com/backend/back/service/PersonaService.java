@@ -83,7 +83,22 @@ public class PersonaService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO<>(e.getMessage(), "error", null));
         }
+    }
+
+    public ResponseEntity<ResponseDTO<List<Persona>>> listarPersonasFechaCreacion(Date fi, Date ff) throws Exception {
+        try{
+            List<Persona> personas = personaRepository.listarPersonasFechaCreacion(fi, ff);
+            if (personas.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("No se encontraron personas con ese nombre", "error", null));
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Personas encontradas", "ok", personas));
+            }
+        }catch (DataAccessException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
         }
+    }
 
     @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<ResponseDTO<Persona>> crearPersona(PersonaReq persona) throws Exception {
@@ -101,6 +116,8 @@ public class PersonaService {
             nuevaPersona.setPais(persona.pais());
             nuevaPersona.setDepartamentoId(persona.departamento());
             nuevaPersona.setCiudadId(persona.ciudad());
+            nuevaPersona.setFechaCreacion(new Date());
+            nuevaPersona.setFechaModificacion(new Date());
 
             personaRepository.save(nuevaPersona);
 
@@ -116,23 +133,24 @@ public class PersonaService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public ResponseEntity<ResponseDTO<Optional<Persona>>> actualizarPersona(Persona persona) throws Exception {
+    public ResponseEntity<ResponseDTO<Optional<Persona>>> actualizarPersona(Long id ,PersonaReq persona) throws Exception {
 
         try{
 
-            Optional<Persona> personaExist = buscarPersonaPorId(persona.getId());
+            Optional<Persona> personaExist = buscarPersonaPorId(id);
             personaExist.ifPresent(personaExistente -> {
-                personaExistente.setNombre(persona.getNombre());
-                personaExistente.setApellido(persona.getApellido());
-                personaExistente.setEmail(persona.getEmail());
-                personaExistente.setTipoDocumento(persona.getTipoDocumento());
-                personaExistente.setDocumento(persona.getDocumento());
-                personaExistente.setDireccion(persona.getDireccion());
-                personaExistente.setTelefono(persona.getTelefono());
-                personaExistente.setFechaNacimiento(persona.getFechaNacimiento());
-                personaExistente.setPais(persona.getPais());
-                personaExistente.setDepartamentoId(persona.getDepartamentoId());
-                personaExistente.setCiudadId(persona.getCiudadId());
+                personaExistente.setNombre(persona.nombre());
+                personaExistente.setApellido(persona.apellido());
+                personaExistente.setEmail(persona.email());
+                personaExistente.setTipoDocumento(persona.tipoDocumento());
+                personaExistente.setDocumento(persona.documento());
+                personaExistente.setDireccion(persona.direccion());
+                personaExistente.setTelefono(persona.telefono());
+                personaExistente.setFechaNacimiento(persona.fechaNacimiento());
+                personaExistente.setPais(persona.pais());
+                personaExistente.setDepartamentoId(persona.departamento());
+                personaExistente.setCiudadId(persona.ciudad());
+                personaExistente.setFechaModificacion(new Date());
 
                 personaRepository.save(personaExistente);
 

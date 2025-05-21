@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +21,7 @@ public interface IPersonaRepository extends JpaRepository<Persona, Long> {
 
     @Query("select p from Persona p where p.departamentoId.nombre = :dep and p.ciudadId.municipio = :city ")
     List<Persona> buscarPersonaLocacion(@Param("dep") String dep, @Param("city") String city) throws Exception;
+
+    @Query("select p from Persona p where p.fechaCreacion between :fi and :ff")
+    List<Persona> listarPersonasFechaCreacion(@Param("fi") Date fi, @Param("ff") Date ff) throws Exception;
 }

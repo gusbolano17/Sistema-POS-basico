@@ -33,12 +33,16 @@ export class PersonasService {
     return this.http.get<ResponseDto<Personas[]>>(`${this.httpUtil.url}/personas/listar/departamento/${dep}/ciudad/${mun}`);
   }
 
+  listarPersonasFechas(fechaIni: Date | undefined, fechaFin: Date | undefined){
+    return this.http.get<ResponseDto<Personas[]>>(`${this.httpUtil.url}/personas/listar/fecha-creacion/${fechaIni}/${fechaFin}`);
+  }
+
   agregarPersona(persona : PersonaDTO){
     return this.http.post<ResponseDto<Personas>>(`${this.httpUtil.url}/personas/crear`, persona);
   }
 
-  editarPersona(persona : PersonaDTO){
-    return this.http.put<ResponseDto<Personas>>(`${this.httpUtil.url}/personas/actualizar`, persona);
+  editarPersona(id: number | undefined, persona: PersonaDTO){
+    return this.http.put<ResponseDto<Personas>>(`${this.httpUtil.url}/personas/actualizar/${id}`, persona);
   }
 
 }

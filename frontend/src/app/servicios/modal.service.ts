@@ -7,13 +7,22 @@ import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 export class ModalService {
 
   private dialogS = inject(DialogService);
-  private ref : DynamicDialogRef = new DynamicDialogRef();
+  private ref : DynamicDialogRef | null = null;
 
   open(compontent : Type<any>, data : { }){
     this.ref = this.dialogS.open(compontent, {
       inputValues: data,
       modal: true,
     })
+
+    return this.ref.onClose;
+  }
+
+  close(){
+    if(this.ref){
+      this.ref.close();
+      this.ref = null;
+    }
   }
 
 }

@@ -17,6 +17,8 @@ import {ToastModule} from 'primeng/toast';
 import {ToastService} from '../../../servicios/toast.service';
 import {MessageService} from 'primeng/api';
 import {Personas} from '../../../modelos/personas';
+import {ModalService} from '../../../servicios/modal.service';
+import {DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-crear-persona',
@@ -51,8 +53,9 @@ export class CrearPersonaComponent implements OnInit{
   private departamentoService = inject(DepartamentoService);
   private municipioService = inject(MunicipioService);
   private toastService = inject(ToastService);
+  private modalService = inject(ModalService);
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private dialogRef: DynamicDialogRef) {
     this.personaForm = this.formBuilder.group({
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
@@ -96,13 +99,21 @@ export class CrearPersonaComponent implements OnInit{
 
   submitPersona() {
     if (this.personaForm.valid) {
-
       const persona : PersonaDTO = this.personaForm.value;
-
-      this.personaService.agregarPersona(persona).subscribe(resp =>{
-        this.toastService.mostrarToast(resp.msg, resp.code == '201' ? 'success' : 'error');
-        this.personaForm.reset();
-      });
+      if (this.editando) {
+        this.personaService.editarPersona(this.persona?.id, this.personaForm.value).subscribe(resp => {
+          this.dialogRef.close(resp);
+        }, error => {
+          this.toastService.mostrarToast(error.error.msg, 'error');
+        })
+      }else{
+        this.personaService.agregarPersona(persona).subscribe(resp =>{
+          this.toastService.mostrarToast(resp.msg, 'success');
+          this.personaForm.reset();
+        }, error => {
+          this.toastService.mostrarToast(error.error.msg, 'error');
+        });
+      }
     }
   }
 

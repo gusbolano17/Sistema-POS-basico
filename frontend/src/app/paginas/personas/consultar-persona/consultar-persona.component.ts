@@ -51,6 +51,8 @@ export class ConsultarPersonaComponent{
   public tipoDocumento : string = '';
   public documento : string = '';
   public opcionActual : string = '';
+  public fechaInicial : Date | undefined;
+  public fechaFinal : Date | undefined;
 
   public personas : Personas[] = [];
   public departamentos: Departamento[] = [];
@@ -111,9 +113,12 @@ export class ConsultarPersonaComponent{
         })
         break;
       case OpcionesBusqueda.FECHA_CREACION:
+        this.personaService.listarPersonasFechas(this.fechaInicial, this.fechaFinal).subscribe(resp => {
+          this.personas = resp.body;
+          this.toastService.mostrarToast(resp.msg, 'success');
+        })
         break;
       case OpcionesBusqueda.LOCACION:
-        console.log(this.departamento, this.ciudad);
         this.personaService.buscarPersonaLocacion(this.departamento?.nombre, this.ciudad?.municipio).subscribe(resp => {
           this.personas = resp.body;
           this.toastService.mostrarToast(resp.msg, 'success');
@@ -127,6 +132,8 @@ export class ConsultarPersonaComponent{
   selectPersona(id: number) {
     this.personaService.buscarPersona(id).subscribe(resp => {
       this.modalService.open(CrearPersonaComponent, {titulo : "Editar Persona", editando : true, persona : resp})
+        .subscribe((res) => {
+          this.toastService.mostrarToast(res.msg,'success')})
     })
   }
 }

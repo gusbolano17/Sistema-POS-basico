@@ -11,6 +11,7 @@ export interface Personas {
     telefono : string;
     direccion : string;
     fechaNacimiento : Date;
+    fechaCreacion : Date;
     pais : string;
     departamentoId : Departamento;
     ciudadId : Ciudad;
