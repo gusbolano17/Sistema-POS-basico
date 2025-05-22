@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit, Optional} from '@angular/core';
 import {TabsModule} from 'primeng/tabs';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
@@ -18,7 +18,7 @@ import {ToastService} from '../../../servicios/toast.service';
 import {MessageService} from 'primeng/api';
 import {Personas} from '../../../modelos/personas';
 import {ModalService} from '../../../servicios/modal.service';
-import {DynamicDialogRef} from 'primeng/dynamicdialog';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-crear-persona',
@@ -37,7 +37,7 @@ import {DynamicDialogRef} from 'primeng/dynamicdialog';
   templateUrl: './crear-persona.component.html',
   styleUrl: './crear-persona.component.css',
   standalone : true,
-  providers: [ToastService,MessageService]
+  providers: [ToastService,MessageService,DialogService, ModalService]
 })
 export class CrearPersonaComponent implements OnInit{
 
@@ -53,9 +53,8 @@ export class CrearPersonaComponent implements OnInit{
   private departamentoService = inject(DepartamentoService);
   private municipioService = inject(MunicipioService);
   private toastService = inject(ToastService);
-  private modalService = inject(ModalService);
 
-  constructor(private formBuilder: FormBuilder, private dialogRef: DynamicDialogRef) {
+  constructor(private formBuilder: FormBuilder,  @Optional() private dialogRef?: DynamicDialogRef) {
     this.personaForm = this.formBuilder.group({
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
@@ -102,7 +101,7 @@ export class CrearPersonaComponent implements OnInit{
       const persona : PersonaDTO = this.personaForm.value;
       if (this.editando) {
         this.personaService.editarPersona(this.persona?.id, this.personaForm.value).subscribe(resp => {
-          this.dialogRef.close(resp);
+          this.dialogRef?.close(resp);
         }, error => {
           this.toastService.mostrarToast(error.error.msg, 'error');
         })

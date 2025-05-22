@@ -10,7 +10,26 @@
     <div class="d-flex align-items-center gap-2">
       <p-button icon="pi pi-envelope" severity="contrast"/>
       <p-button icon="pi pi-bell" severity="contrast"/>
-      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" [style]="{ width: '32px', height: '32px' }" />
+      <p-button (onClick)="toggle($event)">
+        <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" [style]="{ width: '32px', height: '32px' }" />
+      </p-button>
     </div>
   </ng-template>
 </p-toolbar>
+
+<p-popover #op>
+  <p-menu [model]="items" class="d-flex justify-content-center">
+    <ng-template #start>
+        <span class="d-inline-flex align-items-center gap-1 px-2 py-2">
+          <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" [style]="{ width: '32px', height: '32px' }" />
+          <span class="text-xl-center fw-bold">{{usuario}}</span>
+        </span>
+    </ng-template>
+    <ng-template #item let-item>
+      <a pRipple class="d-flex align-items-center p-menu-item-link">
+        <span [class]="item.icon"></span>
+        <span class="ml-2">{{ item.label }}</span>
+      </a>
+    </ng-template>
+  </p-menu>
+</p-popover>
