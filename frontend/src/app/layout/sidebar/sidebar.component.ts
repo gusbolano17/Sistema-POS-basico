@@ -45,6 +45,21 @@ export class SidebarComponent implements OnInit{
             route : 'personas/consultar'
           }
         ]
+      },
+      {
+        label: 'usuarios',
+        items: [
+          {
+            label: 'Crear',
+            icon: 'pi pi-plus',
+            route : 'usuarios/crear'
+          },
+          {
+            label: 'Consultar',
+            icon: 'pi pi-search',
+            route : 'usuarios/consultar'
+          }
+        ]
       }
     ];
   }

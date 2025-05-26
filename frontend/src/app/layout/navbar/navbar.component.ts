@@ -7,6 +7,10 @@ import {MenuItem} from 'primeng/api';
 import {Menu} from 'primeng/menu';
 import {LoginService} from '../../servicios/login.service';
 import {Ripple} from 'primeng/ripple';
+import {UsuarioService} from '../../servicios/usuario.service';
+import {ModalService} from '../../servicios/modal.service';
+import {DialogService} from 'primeng/dynamicdialog';
+import {CrearUsuarioComponent} from '../../paginas/usuarios/crear-usuario/crear-usuario.component';
 
 
 @Component({
@@ -21,7 +25,8 @@ import {Ripple} from 'primeng/ripple';
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
-  standalone: true
+  standalone: true,
+  providers: [ModalService, DialogService]
 })
 export class NavbarComponent implements OnInit{
 
@@ -29,9 +34,11 @@ export class NavbarComponent implements OnInit{
   @ViewChild('op') op!: Popover;
 
   public usuario : string | undefined | null = '';
-
-  private loginS = inject(LoginService);
   items: MenuItem[] | undefined;
+
+  private modalS = inject(ModalService);
+  private loginS = inject(LoginService);
+  private usuarioS = inject(UsuarioService);
 
   ngOnInit(): void {
     this.usuario = this.loginS.getLoggedUser();
@@ -43,7 +50,10 @@ export class NavbarComponent implements OnInit{
         items: [
           {
             label: 'Info del usuario',
-            icon: 'pi pi-user'
+            icon: 'pi pi-user',
+            command: () => {
+              this.openUsuarioModal();
+            }
           },
           {
             label: 'Cerrar sesión',
@@ -54,10 +64,20 @@ export class NavbarComponent implements OnInit{
           }
         ]
       }]
+
+    this.usuarioS.buscarUsuarioNombre(this.usuario).subscribe(
+      resp => {
+        console.log(resp)
+      }
+    )
   }
 
   toggle(event : any){
     this.op.toggle(event);
+  }
+
+  openUsuarioModal(){
+    this.modalS.open(CrearUsuarioComponent, {titulo : "Usuario", editando : false})
   }
 
 }

@@ -19,6 +19,11 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
+    @GetMapping("/obtener/nombre/{nombre}")
+    public ResponseEntity<?> buscarUsuarioNombre(@PathVariable("nombre") String nombre) throws Exception{
+        return usuarioService.buscarUsuarioNombre(nombre);
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<?> crear(@RequestBody Usuario usuario) throws Exception {
         return ResponseEntity.ok(usuarioService.crearUsuario(usuario));

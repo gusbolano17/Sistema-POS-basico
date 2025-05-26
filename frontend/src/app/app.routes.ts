@@ -3,6 +3,7 @@ import {LoginComponent} from './paginas/login/login.component';
 import {MainComponent} from './paginas/main/main.component';
 import {authGuard} from './servicios/auth.guard';
 import {personasRoutes} from './paginas/personas/personas.routes';
+import {usuariosRoutes} from './paginas/usuarios/usuarios.routes';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'login'},
@@ -17,6 +18,9 @@ export const routes: Routes = [
     },{
       path: 'personas',
       children: personasRoutes
+    },{
+      path: 'usuarios',
+      children: usuariosRoutes
     },{
       path: '',
       pathMatch: 'full',
