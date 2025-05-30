@@ -14,6 +14,7 @@ import {ToastService} from '../../../servicios/toast.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ModalService} from '../../../servicios/modal.service';
 import {Personas} from '../../../modelos/personas';
+import {UsuarioService} from '../../../servicios/usuario.service';
 
 @Component({
   selector: 'app-crear-usuario',
@@ -38,15 +39,19 @@ export class CrearUsuarioComponent {
   usuarioForm : FormGroup;
 
   private personaService = inject(PersonasService);
+  private usuarioService = inject(UsuarioService);
 
   constructor(private fb : FormBuilder) {
     this.usuarioForm = fb.group({
-      persona : new FormGroup({
-        tipoDocumento: new FormControl( '', [Validators.required]),
-        documento: new FormControl('', [Validators.required]),
-        nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
-        apellido: new FormControl({value: '', disabled: true}, [Validators.required]),
-      })
+      persona : fb.group({
+        tipoDocumento: [ '', [Validators.required]],
+        documento: ['', [Validators.required]],
+        nombre: [{value: '', disabled: true}, [Validators.required]],
+        apellido: [{value: '', disabled: true}, [Validators.required]],
+      }),
+      username : ['', Validators.required],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
     });
   }
 
@@ -66,6 +71,12 @@ export class CrearUsuarioComponent {
         }
       });
     });
+  }
+
+  submitUsuario() {
+    this.usuarioService.agregarUsuario(this.usuarioForm.value).subscribe(resp => {
+      console.log(resp);
+    })
   }
 
 }

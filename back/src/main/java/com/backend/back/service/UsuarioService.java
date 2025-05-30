@@ -1,11 +1,14 @@
 package com.backend.back.service;
 
+import com.backend.back.models.Persona;
 import com.backend.back.models.Usuario;
 import com.backend.back.models.dtos.ResponseDTO;
+import com.backend.back.models.dtos.UsuarioDto;
 import com.backend.back.repository.IUsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private IUsuarioRepository usuarioRepository;
+    @Autowired
+    private PersonaService personaService;
 
     public List<Usuario> listarUsuarios() throws Exception {
         return usuarioRepository.findAll();
@@ -43,42 +48,49 @@ public class UsuarioService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Map<String,Object> crearUsuario(Usuario usuario) throws Exception {
-
-        Map<String,Object> response = new HashMap<>();
+    public ResponseEntity<ResponseDTO<Usuario>> crearUsuario(UsuarioDto usuario) throws Exception {
 
         try{
 
             Usuario nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombre(usuario.getNombre());
-            nuevoUsuario.setApellido(usuario.getApellido());
-            nuevoUsuario.setEmail(usuario.getEmail());
-            nuevoUsuario.setDireccion(usuario.getDireccion());
-            nuevoUsuario.setTelefono(usuario.getTelefono());
-            nuevoUsuario.setUsername(usuario.getUsername());
 
-            String passEncoded = passwordEncoder.encode(usuario.getPassword());
+            ResponseDTO<Persona> personaExist = personaService
+                    .buscarPersonaPorDoc(usuario.persona().get("tipoDocumento"), usuario.persona().get("documento"))
+                    .getBody();
+
+            if (personaExist == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("persona no existe", "error", null));
+            }
+
+            nuevoUsuario.setNombre(personaExist.body().getNombre());
+            nuevoUsuario.setApellido(personaExist.body().getApellido());
+            nuevoUsuario.setEmail(personaExist.body().getEmail());
+            nuevoUsuario.setDireccion(personaExist.body().getDireccion());
+            nuevoUsuario.setTelefono(personaExist.body().getTelefono());
+            nuevoUsuario.setUsername(usuario.username());
+
+            String passEncoded = passwordEncoder.encode(usuario.password());
 
             nuevoUsuario.setPassword(passEncoded);
-            nuevoUsuario.setFechaNacimiento(usuario.getFechaNacimiento());
-            nuevoUsuario.setFechaNacimiento(usuario.getFechaNacimiento());
-            nuevoUsuario.setPais(usuario.getPais());
-            nuevoUsuario.setDepartamentoId(usuario.getDepartamentoId());
-            nuevoUsuario.setCiudadId(usuario.getCiudadId());
+            nuevoUsuario.setTipoDocumento(personaExist.body().getTipoDocumento());
+            nuevoUsuario.setDocumento(personaExist.body().getDocumento());
+            nuevoUsuario.setFechaNacimiento(personaExist.body().getFechaNacimiento());
+            nuevoUsuario.setFechaModificacion(new Date());
+            nuevoUsuario.setPais(personaExist.body().getPais());
+            nuevoUsuario.setDepartamentoId(personaExist.body().getDepartamentoId());
+            nuevoUsuario.setCiudadId(personaExist.body().getCiudadId());
             nuevoUsuario.setFechaCreacion(new Date());
 
             usuarioRepository.save(nuevoUsuario);
 
-            response.put("msg", "Usuario guardado");
-            response.put("code", 201);
-            response.put("status", "created");
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseDTO<>("Usuario guardada", "ok", nuevoUsuario));
         }catch (Exception e){
-            response.put("msg", e.getMessage());
-            response.put("code", 500);
-            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
         }
 
-        return response;
 
     }
 
