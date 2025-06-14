@@ -169,4 +169,28 @@ public class PersonaService {
 
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    public ResponseEntity<ResponseDTO<?>> eliminarPersona(Long id) throws Exception {
+
+        try {
+
+            Optional<Persona> personaExist = buscarPersonaPorId(id);
+
+            if(personaExist.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("Persona no encontrada", "error", null));
+            }
+
+            this.personaRepository.delete(personaExist.get());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDTO<>("Persona eliminada", "ok", null));
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
+
+    }
+
 }

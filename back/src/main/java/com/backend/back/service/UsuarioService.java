@@ -25,12 +25,42 @@ public class UsuarioService {
     @Autowired
     private PersonaService personaService;
 
-    public List<Usuario> listarUsuarios() throws Exception {
-        return usuarioRepository.findAll();
+    public ResponseEntity<ResponseDTO<List<Usuario>>> listarUsuarios() throws Exception {
+        try {
+            var usuarios = usuarioRepository.findAll();
+
+            if (usuarios.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("No hay usuarios registrados", "error", null));
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Usuarios encontrados", "ok", usuarios));
+            }
+
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
     }
 
     public Optional<Usuario> buscarUsuarioPorId(Long idUsuario) throws Exception {
         return usuarioRepository.findById(idUsuario);
+    }
+
+    public ResponseEntity<ResponseDTO<List<Usuario>>> listarUsuariosNombre(String name) throws Exception {
+        try {
+            var usuarios = usuarioRepository.listarUsuariosNombre(name);
+
+            if (usuarios.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("No hay usuarios registrados que coinciden con su criterio", "error", null));
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Usuarios encontrados", "ok", usuarios));
+            }
+
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
     }
 
     public ResponseEntity<ResponseDTO<Usuario>> buscarUsuarioNombre(String username) throws Exception {
@@ -47,6 +77,27 @@ public class UsuarioService {
         }
     }
 
+    public ResponseEntity<ResponseDTO<List<Usuario>>> listarUsuariosFecha(Date fechaInicio, Date fechaFin) throws Exception {
+        try {
+            var usuarios = usuarioRepository.listarUsuariosFecha(fechaInicio, fechaFin);
+
+            if (usuarios.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>(
+                                String.format("No hay usuarios registrados entre las fechas %s y %s", fechaInicio, fechaFin),
+                                "error",
+                                null)
+                        );
+            }else{
+                return ResponseEntity.ok(new ResponseDTO<>("Usuarios encontrados", "ok", usuarios));
+            }
+
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public ResponseEntity<ResponseDTO<Usuario>> crearUsuario(UsuarioDto usuario) throws Exception {
 
@@ -55,7 +106,7 @@ public class UsuarioService {
             Usuario nuevoUsuario = new Usuario();
 
             ResponseDTO<Persona> personaExist = personaService
-                    .buscarPersonaPorDoc(usuario.persona().get("tipoDocumento"), usuario.persona().get("documento"))
+                    .buscarPersonaPorDoc(usuario.personaId().get("tipoDocumento"), usuario.personaId().get("documento"))
                     .getBody();
 
             if (personaExist == null){
@@ -63,23 +114,12 @@ public class UsuarioService {
                         .body(new ResponseDTO<>("persona no existe", "error", null));
             }
 
-            nuevoUsuario.setNombre(personaExist.body().getNombre());
-            nuevoUsuario.setApellido(personaExist.body().getApellido());
-            nuevoUsuario.setEmail(personaExist.body().getEmail());
-            nuevoUsuario.setDireccion(personaExist.body().getDireccion());
-            nuevoUsuario.setTelefono(personaExist.body().getTelefono());
             nuevoUsuario.setUsername(usuario.username());
 
             String passEncoded = passwordEncoder.encode(usuario.password());
 
             nuevoUsuario.setPassword(passEncoded);
-            nuevoUsuario.setTipoDocumento(personaExist.body().getTipoDocumento());
-            nuevoUsuario.setDocumento(personaExist.body().getDocumento());
-            nuevoUsuario.setFechaNacimiento(personaExist.body().getFechaNacimiento());
-            nuevoUsuario.setFechaModificacion(new Date());
-            nuevoUsuario.setPais(personaExist.body().getPais());
-            nuevoUsuario.setDepartamentoId(personaExist.body().getDepartamentoId());
-            nuevoUsuario.setCiudadId(personaExist.body().getCiudadId());
+            nuevoUsuario.setPersonaId(personaExist.body());
             nuevoUsuario.setFechaCreacion(new Date());
 
             usuarioRepository.save(nuevoUsuario);
@@ -94,4 +134,58 @@ public class UsuarioService {
 
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    public ResponseEntity<ResponseDTO<Usuario>> actualizarUsuario(Long id ,UsuarioDto usuario) throws Exception {
+        try{
+
+            Optional<Usuario> usuarioExist = buscarUsuarioPorId(id);
+
+            if (usuarioExist.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("Usuario no encontrado", "error", null));
+            }
+
+            Usuario usu = usuarioExist.get();
+
+            ResponseDTO<Persona> personaExist = personaService
+                    .buscarPersonaPorDoc(usuario.personaId().get("tipoDocumento"), usuario.personaId().get("documento"))
+                    .getBody();
+
+            assert personaExist != null;
+            usu.setPersonaId(personaExist.body());
+            usu.setUsername(usuario.username());
+            usu.setPassword(passwordEncoder.encode(usuario.password()));
+
+            usuarioRepository.save(usu);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResponseDTO<>("Usuario actualizado", "ok", usu));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public ResponseEntity<ResponseDTO<?>> eliminarUsuario(Long id) throws Exception {
+
+        try{
+            Optional<Usuario> usuarioExist = buscarUsuarioPorId(id);
+
+            if(usuarioExist.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResponseDTO<>("Usuario no encontrado", "error", null));
+            }
+
+            usuarioRepository.delete(usuarioExist.get());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDTO<>("Usuario eliminado", "ok", null));
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO<>(e.getMessage(), "error", null));
+        }
+
+    }
 }

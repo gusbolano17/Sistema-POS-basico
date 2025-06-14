@@ -58,4 +58,9 @@ public class PersonaController {
         return personaService.actualizarPersona(id,persona);
     }
 
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<?> eliminarPersona(@PathVariable("id") Long id) throws Exception {
+        return personaService.eliminarPersona(id);
+    }
+
 }

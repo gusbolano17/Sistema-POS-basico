@@ -13,6 +13,7 @@ export class ModalService {
     this.ref = this.dialogS.open(compontent, {
       inputValues: data,
       modal: true,
+      height : 'fit-content'
     })
 
     return this.ref.onClose;

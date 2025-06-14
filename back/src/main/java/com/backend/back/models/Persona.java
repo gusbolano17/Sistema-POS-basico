@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Entity
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Persona {
 
     @Id

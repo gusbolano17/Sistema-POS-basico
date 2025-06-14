@@ -19,6 +19,7 @@ import {MessageService} from 'primeng/api';
 import {Personas} from '../../../modelos/personas';
 import {ModalService} from '../../../servicios/modal.service';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
+import {FormUtilService} from '../../../servicios/form-util.service';
 
 @Component({
   selector: 'app-crear-persona',
@@ -53,6 +54,7 @@ export class CrearPersonaComponent implements OnInit{
   private departamentoService = inject(DepartamentoService);
   private municipioService = inject(MunicipioService);
   private toastService = inject(ToastService);
+  private formUtilService = inject(FormUtilService<Personas>);
 
   constructor(private formBuilder: FormBuilder,  @Optional() private dialogRef?: DynamicDialogRef) {
     this.personaForm = this.formBuilder.group({
@@ -74,20 +76,8 @@ export class CrearPersonaComponent implements OnInit{
     this.departamentoService.listarDepartamentos().subscribe(resp => {
       this.departamentos = resp;
     });
-    console.log(this.persona)
-    this.personaForm.patchValue({
-      nombre: this.persona?.nombre,
-      apellido : this.persona?.apellido,
-      tipoDocumento: this.persona?.tipoDocumento,
-      documento: this.persona?.documento,
-      fechaNacimiento: this.persona?.fechaNacimiento,
-      direccion: this.persona?.direccion,
-      telefono: this.persona?.telefono,
-      email: this.persona?.email,
-      pais: this.persona?.pais,
-      departamento: this.persona?.departamentoId,
-      ciudad: this.persona?.ciudadId
-    });
+
+    this.formUtilService.setearFormulario(this.persona, this.personaForm);
   }
 
   listarCiudadesDep(event : any) {
@@ -100,18 +90,18 @@ export class CrearPersonaComponent implements OnInit{
     if (this.personaForm.valid) {
       const persona : PersonaDTO = this.personaForm.value;
       if (this.editando) {
-        this.personaService.editarPersona(this.persona?.id, this.personaForm.value).subscribe(resp => {
-          this.dialogRef?.close(resp);
-        }, error => {
-          this.toastService.mostrarToast(error.error.msg, 'error');
+        this.personaService.editarPersona(this.persona?.id, persona).subscribe({
+          next: (resp) => this.dialogRef?.close(resp),
+          error: (error) => this.toastService.mostrarToast(error.error.msg, 'error')
         })
       }else{
-        this.personaService.agregarPersona(persona).subscribe(resp =>{
-          this.toastService.mostrarToast(resp.msg, 'success');
-          this.personaForm.reset();
-        }, error => {
-          this.toastService.mostrarToast(error.error.msg, 'error');
-        });
+        this.personaService.agregarPersona(persona).subscribe({
+          next: (resp) => {
+            this.dialogRef?.close(resp);
+            this.personaForm.reset();
+          },
+          error: (error) => this.toastService.mostrarToast(error.error.msg, 'error')
+        })
       }
     }
   }

@@ -7,3 +7,8 @@ export enum OpcionesBusqueda {
   LOCACION = 'LOCACION'
 
 }
+ export enum OpcionesBusquedaUsuario {
+   TODO = 'TODO',
+   NOMBRE = 'NOMBRE',
+   FECHA_CREACION = 'FECHA CREACION',
+ }

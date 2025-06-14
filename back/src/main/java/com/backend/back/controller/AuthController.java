@@ -35,7 +35,7 @@ public class AuthController {
 
             return new ResponseEntity<>(Map.of("msg","usuario autenticado","body", token), HttpStatus.OK);
         }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Map.of("msg",e.getMessage()), HttpStatus.UNAUTHORIZED);
         }
     }
 
