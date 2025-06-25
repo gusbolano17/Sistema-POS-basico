@@ -22,6 +22,7 @@ import {MessageService} from 'primeng/api';
 import {ModalService} from '../../../servicios/modal.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {CrearPersonaComponent} from '../crear-persona/crear-persona.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-consultar-persona',
@@ -135,5 +136,31 @@ export class ConsultarPersonaComponent{
         .subscribe((res) => {
           this.toastService.mostrarToast(res.msg,'success')})
     })
+  }
+
+  eliminarPersona(id: number) {
+
+    Swal.fire({
+      title: 'Advertencia',
+      text: 'Estas seguro de eliminar esta persona?',
+      icon: 'warning',
+      denyButtonText: 'Cancelar',
+      showDenyButton: true,
+      confirmButtonColor: 'green',
+      theme: 'dark',
+    }).then((result) => {
+      if(result.isConfirmed) {
+        this.personaService.eliminarPersona(id).subscribe({
+          next: res => {
+            this.toastService.mostrarToast(res.msg, 'success' );
+            this.personas.splice(this.personas.findIndex(p => p.id === id), 1);
+          },
+          error: err => {
+            this.toastService.mostrarToast(err.error.msg, 'error' );
+          }
+        })
+      }
+    })
+
   }
 }

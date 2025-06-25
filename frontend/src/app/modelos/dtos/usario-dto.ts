@@ -2,11 +2,13 @@ import {Personas} from '../personas';
 
 export interface UsuarioDto {
 
-  persona : {
-    tipoDocumento : string;
-    documento : string;
-  },
+  persona : Persona,
   username : string
   password: string
 
+}
+
+interface Persona {
+  tipoDocumento : string;
+  documento : string;
 }

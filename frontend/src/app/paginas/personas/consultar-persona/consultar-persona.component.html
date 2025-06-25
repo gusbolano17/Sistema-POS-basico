@@ -169,7 +169,7 @@
                 <td>{{ persona.documento }}</td>
                 <td class="d-flex gap-2">
                   <p-button label="Editar" icon="pi pi-pencil" severity="warn" (onClick)="selectPersona(persona.id)"/>
-                  <p-button label="Eliminar" icon="pi pi-trash" severity="danger"/>
+                  <p-button label="Eliminar" icon="pi pi-trash" severity="danger" (onClick)="eliminarPersona(persona.id)"/>
                 </td>
               </tr>
             </ng-template>

@@ -33,6 +33,7 @@ export class SidebarComponent implements OnInit{
       },
       {
         label: 'Personas',
+        icon: 'pi pi-id-card',
         items: [
           {
             label: 'Crear',
@@ -47,7 +48,8 @@ export class SidebarComponent implements OnInit{
         ]
       },
       {
-        label: 'usuarios',
+        label: 'Usuarios',
+        icon: 'pi pi-user',
         items: [
           {
             label: 'Crear',
@@ -58,6 +60,22 @@ export class SidebarComponent implements OnInit{
             label: 'Consultar',
             icon: 'pi pi-search',
             route : 'usuarios/consultar'
+          }
+        ]
+      },
+      {
+        label : 'Inventario',
+        icon: 'pi pi-box',
+        items: [
+          {
+            label: 'Crear',
+            icon: 'pi pi-plus',
+            route : 'productos/crear'
+          },
+          {
+            label: 'Consultar',
+            icon: 'pi pi-search',
+            route : 'productos/consultar'
           }
         ]
       }

@@ -15,4 +15,5 @@ export interface Personas {
     pais : string;
     departamentoId : Departamento;
     ciudadId : Ciudad;
+    tipoPersona : string;
 }

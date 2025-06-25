@@ -1,0 +1,192 @@
+<p-tabs value="0">
+  <p-tablist>
+    <p-tab value="0">Agregar al inventario</p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="0">
+      <form [formGroup]="productoForm" (ngSubmit)="agregarInventario()">
+
+        <p-divider align="center" type="solid">
+          <b>Datos del producto</b>
+        </p-divider>
+
+        <div class="row">
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="nombre"
+                formControlName="nombre"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="nombre">Nombre</label>
+            </p-floatlabel>
+
+            @if(productoForm.get('nombre')?.touched && productoForm.get('nombre')?.invalid){
+              <small>Falta el nombre</small>
+            }
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="descripcion"
+                formControlName="descripcion"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="nombre">Descripcion</label>
+            </p-floatlabel>
+
+            @if(productoForm.get('descripcion')?.touched && productoForm.get('descripcion')?.invalid){
+              <small>Falta la descripcion</small>
+            }
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <p-select
+                id="categoria"
+                [options]="categorias"
+                placeholder="seleccione"
+                optionLabel="nombre"
+                size="large"
+                fluid="true"
+                formControlName="categoria"
+              />
+              <label for="ciudad">Categoria</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <p-inputNumber
+                inputId="currency-co"
+                mode="currency"
+                currency="COP"
+                locale="es-CO"
+                size="large"
+                formControlName="precio"
+                fluid="true"/>
+              <label for="nombre">Precio de venta</label>
+            </p-floatlabel>
+
+            @if(productoForm.get('precio')?.touched && productoForm.get('precio')?.invalid){
+              <small>Falta el precio de venta</small>
+            }
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <p-inputNumber
+                inputId="integerOnly"
+                formControlName="stock"
+                size="large"
+                fluid="true"/>
+              <label for="nombre">Stock</label>
+            </p-floatlabel>
+
+            @if(productoForm.get('precio')?.touched && productoForm.get('precio')?.invalid){
+              <small>Falta el precio de venta</small>
+            }
+          </div>
+
+        </div>
+
+        <p-divider align="center" type="solid">
+          <b>Datos del proveedor</b>
+        </p-divider>
+
+        <div class="row" formGroupName="proveedor">
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="tipoDocumento"
+                autocomplete="off"
+                pSize="large"
+                formControlName="tipoDocumento"
+                fluid="true"/>
+              <label for="tipoDocumento">Tipo documento</label>
+            </p-floatlabel>
+          </div>
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="documento"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"
+                (blur)="obtenerPersonaDoc()"
+                formControlName="documento"
+              >
+              <label for="documento">Documento</label>
+            </p-floatlabel>
+          </div>
+          @if (persona != null) {
+            <div class="col-md-3">
+              <p-floatlabel variant="on" class="mt-3">
+                <input
+                  pInputText
+                  id="nombre"
+                  autocomplete="off"
+                  pSize="large"
+                  formControlName="nombre"
+                  fluid="true"/>
+                <label for="nombre">Nombre</label>
+              </p-floatlabel>
+            </div>
+            @if (persona.tipoDocumento == 'CC') {
+              <div class="col-md-3">
+                <p-floatlabel variant="on" class="mt-3">
+                  <input
+                    pInputText
+                    id="apellido"
+                    autocomplete="off"
+                    pSize="large"
+                    formControlName="apellido"
+                    fluid="true"/>
+                  <label for="apellido">Apellido</label>
+                </p-floatlabel>
+              </div>
+            }
+          }
+        </div>
+
+        <p-divider align="center" type="solid">
+          <b>Imagen del producto</b>
+        </p-divider>
+
+        <div class="row">
+          <div class="card bg-dark text-light">
+            <p-fileupload
+              (uploadHandler)="subir($event)"
+              customUpload="true"
+              uploadLabel="subir"
+              chooseLabel="seleccionar"
+              cancelLabel="cancelar"
+              [multiple]="false"
+              maxFileSize="1000000"
+              [auto]="true"
+              mode="advanced">
+              <ng-template #empty>
+                <div>Arrastra la imagen del producto que quieras subir</div>
+              </ng-template>
+            </p-fileupload>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p-button [disabled]="productoForm.invalid" label="Guardar" type="submit" class="mt-3"></p-button>
+          </div>
+        </div>
+      </form>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>
+
+<p-toast/>

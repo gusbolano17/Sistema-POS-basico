@@ -45,4 +45,8 @@ export class PersonasService {
     return this.http.put<ResponseDto<Personas>>(`${this.httpUtil.url}/personas/actualizar/${id}`, persona);
   }
 
+  eliminarPersona(id: number | undefined){
+    return this.http.delete<ResponseDto<any>>(`${this.httpUtil.url}/personas/eliminar/${id}`);
+  }
+
 }

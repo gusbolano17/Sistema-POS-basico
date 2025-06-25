@@ -1,6 +1,6 @@
 package com.backend.back.controller;
 
-import com.backend.back.models.Inventario;
+import com.backend.back.models.dtos.InventarioReq;
 import com.backend.back.service.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +25,19 @@ public class InventarioController {
         return ResponseEntity.ok(inventarioService.buscarInventarioPorId(id));
     }
 
+    @GetMapping("/listar/categoria/{cat}")
+    public ResponseEntity<?> buscarInventarioPorCategoria(@PathVariable("cat") String cat) throws Exception{
+        return inventarioService.listarInventarioCategoria(cat);
+    }
+
+    @GetMapping("/listar/proveedor/{proveedor}")
+    public ResponseEntity<?> listarInventarioPorProveedor(@PathVariable("proveedor") String proveedor) throws Exception{
+        return inventarioService.listarInventarioProveedor(proveedor);
+    }
+
     @PostMapping("/crear")
-    public ResponseEntity<?> crearInventario(@RequestBody Inventario inventario) throws Exception {
-        return ResponseEntity.status(HttpStatus.CREATED).body(inventarioService.crearInventario(inventario));
+    public ResponseEntity<?> crearInventario(@RequestBody InventarioReq inventario) throws Exception {
+        return inventarioService.crearInventario(inventario);
     }
 
 }

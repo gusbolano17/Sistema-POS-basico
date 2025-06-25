@@ -15,6 +15,7 @@ public class Inventario {
     private String descripcion;
     private Double precio;
     private Long stock;
+    private String imagenRef;
     @JoinColumn(name = "categoria_id", referencedColumnName = "id")
     @ManyToOne
     private Categoria categoriaId;

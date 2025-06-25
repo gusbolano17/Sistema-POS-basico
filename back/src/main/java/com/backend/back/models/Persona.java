@@ -1,5 +1,6 @@
 package com.backend.back.models;
 
+import com.backend.back.models.enums.TipoPersona;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,6 +24,8 @@ public class Persona {
     private Date fechaNacimiento;
     private Date fechaCreacion;
     private Date fechaModificacion;
+    @Enumerated(EnumType.STRING)
+    private TipoPersona tipoPersona;
     @JoinColumn(name = "departamento_id", referencedColumnName = "id")
     @ManyToOne
     private Departamentos departamentoId;
