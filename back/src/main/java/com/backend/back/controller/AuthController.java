@@ -2,6 +2,7 @@ package com.backend.back.controller;
 
 import com.backend.back.models.Usuario;
 import com.backend.back.models.dtos.UserReq;
+import com.backend.back.models.dtos.UsuarioDto;
 import com.backend.back.service.AuthService;
 import com.backend.back.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,11 @@ public class AuthController {
         }catch(Exception e){
             return new ResponseEntity<>(Map.of("msg",e.getMessage()), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/registrar-usuario")
+    public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioDto usuarioDto) throws Exception {
+        return authService.registrarUsuario(usuarioDto);
     }
 
 }

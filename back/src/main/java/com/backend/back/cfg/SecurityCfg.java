@@ -32,7 +32,13 @@ public class SecurityCfg {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authReq ->
-                    authReq.requestMatchers("/v1/rest/api/auth/**").permitAll()
+                    authReq
+                            .requestMatchers(
+                                    "/v1/rest/api/auth/**",
+                                    "/v1/rest/api/departamentos/**",
+                                    "/v1/rest/api/municipios/**"
+                            )
+                            .permitAll()
                             .anyRequest().authenticated()
                 ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

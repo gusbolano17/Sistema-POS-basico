@@ -106,7 +106,7 @@ public class UsuarioService {
             Usuario nuevoUsuario = new Usuario();
 
             ResponseDTO<Persona> personaExist = personaService
-                    .buscarPersonaPorDoc(usuario.personaId().get("tipoDocumento"), usuario.personaId().get("documento"))
+                    .buscarPersonaPorDoc(usuario.personaId().get("tipoDocumento").toString(), usuario.personaId().get("documento").toString())
                     .getBody();
 
             if (personaExist == null){
@@ -148,7 +148,7 @@ public class UsuarioService {
             Usuario usu = usuarioExist.get();
 
             ResponseDTO<Persona> personaExist = personaService
-                    .buscarPersonaPorDoc(usuario.personaId().get("tipoDocumento"), usuario.personaId().get("documento"))
+                    .buscarPersonaPorDoc(usuario.personaId().get("tipoDocumento").toString(), usuario.personaId().get("documento").toString())
                     .getBody();
 
             assert personaExist != null;

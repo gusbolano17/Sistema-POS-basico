@@ -1,0 +1,218 @@
+<div class="container mt-5">
+  <p-card>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h1>Registrar Usuario</h1>
+      </div>
+    </div>
+    <form [formGroup]="usuarioForm" (ngSubmit)="submitUsuario()">
+
+      <p-divider align="center" type="solid">
+        <b>Datos de la persona</b>
+      </p-divider>
+
+      <div formGroupName="personaId">
+        <div class="row">
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="nombre"
+                formControlName="nombre"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="nombre">Nombre</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="apellido"
+                formControlName="apellido"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="apellido">Apellido</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="tipoDocumento"
+                formControlName="tipoDocumento"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="tipoDocumento">Tipo documento</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="documento"
+                formControlName="documento"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="documento">Documento</label>
+            </p-floatlabel>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <p-datePicker
+                id="fechaNacimiento"
+                formControlName="fechaNacimiento"
+                dateFormat="yyyy-mm-dd"
+                size="large"
+                fluid="true"
+                [showIcon]="true"
+                inputId="buttondisplay"
+                [showOnFocus]="false"/>
+              <label for="fechaNacimiento">Fecha nacimiento</label>
+            </p-floatlabel>
+          </div>
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="email"
+                formControlName="email"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="email">Email</label>
+            </p-floatlabel>
+          </div>
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="telefono"
+                formControlName="telefono"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="telefono">Telefono</label>
+            </p-floatlabel>
+          </div>
+          <div class="col-md-3">
+            <p-floatlabel variant="on" class="mt-3">
+              <input
+                pInputText
+                id="direccion"
+                formControlName="direccion"
+                autocomplete="off"
+                pSize="large"
+                fluid="true"/>
+              <label for="direccion">Direccion</label>
+            </p-floatlabel>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <p-floatlabel variant="on" class="mt-3">
+              <input pInputText id="pais" formControlName="pais" autocomplete="off" pSize="large" fluid="true"/>
+              <label for="pais">Pais</label>
+            </p-floatlabel>
+          </div>
+          <div class="col-md-4">
+            <p-floatlabel variant="on" class="mt-3">
+              <p-select
+                id="departamento"
+                [options]="departamentos"
+                placeholder="seleccione"
+                optionLabel="nombre"
+                size="large"
+                fluid="true"
+                formControlName="departamento"
+                (onChange)="listarCiudadesDep( $event)"
+              />
+              <label for="correo">Departamento</label>
+            </p-floatlabel>
+          </div>
+          <div class="col-md-4">
+            <p-floatlabel variant="on" class="mt-3">
+              <p-select
+                id="ciudad"
+                [options]="ciudades"
+                placeholder="seleccione"
+                optionLabel="municipio"
+                size="large"
+                fluid="true"
+                formControlName="ciudad"
+              />
+              <label for="ciudad">Ciudad</label>
+            </p-floatlabel>
+          </div>
+        </div>
+      </div>
+
+      <p-divider align="center" type="solid">
+        <b>Datos del usuario</b>
+      </p-divider>
+
+      <div class="row">
+        <div class="col-md-4">
+          <p-floatlabel variant="on" class="mt-3">
+            <input
+              pInputText
+              id="username"
+              autocomplete="off"
+              pSize="large"
+              formControlName="username"
+              fluid="true"/>
+            <label for="username">Nombre de usuario</label>
+          </p-floatlabel>
+        </div>
+        <div class="col-md-4">
+          <p-floatlabel variant="on" class="mt-3">
+            <input
+              pInputText
+              type="password"
+              id="password"
+              autocomplete="off"
+              pSize="large"
+              formControlName="password"
+              fluid="true"/>
+            <label for="password">Contraseña</label>
+          </p-floatlabel>
+          @if (usuarioForm.errors?.['PasswordNotMatch']) {
+            <span>Las contraseñas no coinciden</span>
+          }@else if (usuarioForm.get('password')?.errors?.['minlength']){
+            <span>La contraseña debe ser minimo de 6 caracteres</span>
+          }
+        </div>
+        <div class="col-md-4">
+          <p-floatlabel variant="on" class="mt-3">
+            <input
+              pInputText
+              type="password"
+              id="confirmPassword"
+              autocomplete="off"
+              pSize="large"
+              formControlName="confirmPassword"
+              fluid="true"/>
+            <label for="confirmPassword">Confirmar contraseña</label>
+          </p-floatlabel>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <p-button [disabled]="usuarioForm.invalid" label="Registrar usuario" type="submit" class="mt-3"/>
+        </div>
+      </div>
+
+    </form>
+  </p-card>
+</div>

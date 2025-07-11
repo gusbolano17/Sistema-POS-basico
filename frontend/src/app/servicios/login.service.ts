@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {ResponseDto} from '../modelos/dtos/response-dto';
 import {Router} from '@angular/router';
 import {jwtDecode} from 'jwt-decode';
+import {UsuarioDto} from '../modelos/dtos/usario-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,10 @@ export class LoginService {
       return decoded.sub;
     }
     return null;
+  }
+
+  registrarUsuario(usuario : UsuarioDto){
+    return this.http.post(`${this.httpUtil.url}/auth/registrar-usuario`, usuario);
   }
 
 }

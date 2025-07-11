@@ -5,10 +5,12 @@ import {authGuard} from './servicios/auth.guard';
 import {personasRoutes} from './paginas/personas/personas.routes';
 import {usuariosRoutes} from './paginas/usuarios/usuarios.routes';
 import {productosRoutes} from './paginas/productos/productos.routes';
+import {RegistrarUsuarioComponent} from './paginas/login/registrar-usuario/registrar-usuario.component';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'login'},
   {path: 'login', component: LoginComponent},
+  {path: 'registrar-usuario', component: RegistrarUsuarioComponent},
   {
     path: 'main',
     component: MainComponent,
