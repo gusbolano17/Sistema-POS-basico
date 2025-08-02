@@ -33,7 +33,7 @@ import {DialogService} from 'primeng/dynamicdialog';
     Select,
     Divider,
     InputNumber,
-    FileUpload
+    // FileUpload
   ],
   templateUrl: './crear-productos.component.html',
   styleUrl: './crear-productos.component.css',
@@ -50,7 +50,7 @@ export class CrearProductosComponent implements OnInit {
   private toastService = inject(ToastService);
 
   public categorias : Categoria[] = [];
-  public imagenes: any[] = [];
+  // public imagenes: any[] = [];
 
   public productoForm: FormGroup = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -73,10 +73,10 @@ export class CrearProductosComponent implements OnInit {
     })
   }
 
-  subir(event: any) {
-    const archivo : File = event.files[0];
-    this.imagenes.push(archivo);
-  }
+  // subir(event: any) {
+  //   const archivo : File = event.files[0];
+  //   this.imagenes.push(archivo);
+  // }
 
   obtenerPersonaDoc() {
 
